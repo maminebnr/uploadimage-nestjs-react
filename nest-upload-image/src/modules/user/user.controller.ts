@@ -4,6 +4,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { editFileName, imageFileFilter } from '../../utils/file-upload.utils';
+
 
 @Controller('user')
 export class UserController {
@@ -13,8 +16,12 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: 'uploads/users',
+        destination: './uploads/users',
+        filename: editFileName,
+
       }),
+      fileFilter: imageFileFilter,
+
     }),
   )
   
@@ -45,3 +52,4 @@ export class UserController {
     return this.userService.remove(+id);
   }
 }
+
